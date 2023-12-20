@@ -1,1 +1,86 @@
-"Hello world" 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #001f3f; /* темный цвет фона */
+        }
+
+        .tree {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #2ecc40; /* цвет елки */
+			font-size: 1.5em;
+        }
+
+        .flake {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #fff; /* цвет снежинки */
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tree">
+        <pre>  
+                       *
+                      ***
+                     *****
+                    *******
+                   *********
+                  ***********  
+                 *************
+                ***************
+               *****************
+              *******************
+             *********************
+            ***********************
+           *************************
+          ***************************
+         *****************************
+        *******************************
+       *********************************
+      ***********************************
+     *************************************
+    ***************************************
+   *****************************************
+  *******************************************
+ *********************************************
+***********************************************
+        </pre>
+    </div>
+
+    <script>
+        function createFlake() {
+            const flake = document.createElement('div');
+            flake.className = 'flake';
+            flake.style.left = Math.random() * window.innerWidth + 'px';
+            flake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            flake.style.opacity = Math.random();
+            document.body.appendChild(flake);
+
+            flake.addEventListener('animationend', () => {
+                flake.remove();
+            });
+        }
+
+        setInterval(createFlake, 500); // Создаем новые снежинки каждые 500 миллисекунд
+    </script>
+</body>
+</html>
