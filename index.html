@@ -16,6 +16,7 @@
             background-size: cover;
             margin: 0;
             padding: 0;
+            color: #333;
         }
         .container {
             width: 90%;
@@ -76,12 +77,11 @@
         }
         .personal-info.active {
             display: block;
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            position: relative;
             text-align: left;
             border-left: 4px solid #42a5f5;
             padding-left: 10px;
+            margin-bottom: 20px;
         }
         h1, h2, h3 {
             color: #333;
@@ -110,6 +110,7 @@
             border-radius: 5px;
             background-color: #42a5f5;
             cursor: pointer;
+            margin: 5px;
         }
         .btn-telegram {
             background-color: #0088cc;
@@ -123,6 +124,48 @@
         .btn-email .fas {
             margin-right: 8px;
         }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .slider {
+                width: 120px;
+                height: 30px;
+            }
+            .slider-text {
+                font-size: 14px;
+            }
+            .personal-info {
+                position: relative;
+                margin: 0;
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slider {
+                width: 100px;
+                height: 25px;
+            }
+            .slider-text {
+                font-size: 12px;
+            }
+            .btn {
+                padding: 4px 15px;
+                font-size: 14px;
+            }
+            .container {
+                width: 95%;
+                margin: 20px auto;
+            }
+            .personal-info {
+                margin: 0;
+                padding: 5px;
+                border-left-width: 2px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -130,22 +173,22 @@
 <script>
     emailjs.init("iElhtOnwogMGx0X9B");
 
-function getReadableDateInUTC6() {
-    const date = new Date();
-    
-    const options = {
-        timeZone: 'Asia/Bishkek', 
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false 
-    };
-    
-    return date.toLocaleString('en-US', options);
-}
+    function getReadableDateInUTC6() {
+        const date = new Date();
+        
+        const options = {
+            timeZone: 'Asia/Bishkek', 
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false 
+        };
+        
+        return date.toLocaleString('en-US', options);
+    }
 
     fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
@@ -162,18 +205,29 @@ function getReadableDateInUTC6() {
         .catch(error => {
             console.log('Error:', error);
         });
+
+    function toggleLanguage() {
+        const slider = document.querySelector('.slider');
+        const currentLang = slider.getAttribute('data-lang');
+        const newLang = currentLang === 'en' ? 'ru' : 'en';
+        slider.setAttribute('data-lang', newLang);
+        document.getElementById('resume-header-en').classList.toggle('active', newLang === 'en');
+        document.getElementById('resume-header-ru').classList.toggle('active', newLang === 'ru');
+        document.getElementById('resume-en').classList.toggle('active', newLang === 'en');
+        document.getElementById('resume-ru').classList.toggle('active', newLang === 'ru');
+    }
 </script>
 
 <div class="container">
     <div class="language-switch">
-        <div class="slider" onclick="toggleLanguage()" data-lang="ru">
+        <div class="slider" onclick="toggleLanguage()" data-lang="en">
             <div class="toggle"></div>
             <div class="slider-text ru">Русский</div>
             <div class="slider-text en">English</div>
         </div>
     </div>
 
-    <div id="resume-header-ru" class="personal-info active">
+    <div id="resume-header-ru" class="personal-info">
         <h1>Личная информация</h1>
         <div align="left">
             <p><strong>Имя:</strong> Георгий Волков</p>
@@ -392,6 +446,7 @@ function getReadableDateInUTC6() {
             infoEn.classList.remove('active');
         }
     }
+	toggleLanguage();
 </script>
 
 </body>
