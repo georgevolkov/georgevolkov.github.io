@@ -3,102 +3,396 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - Georgiy Volkov</title>
+    <script
+        type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Atlantic_near_Faroe_Islands.jpg/1280px-Atlantic_near_Faroe_Islands.jpg');
+            background-size: cover;
             margin: 0;
-            overflow: hidden;
-            background-color: #001f3f; /* темный цвет фона */
+            padding: 0;
         }
-
-        .tree {
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            position: relative;
+        }
+        .language-switch {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .slider {
+            position: relative;
+            width: 150px;
+            height: 40px;
+            background-color: #b0bec5;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .slider .toggle {
             position: absolute;
-            top: 45%;
+            width: 50%;
+            height: 100%;
+            background-color: #42a5f5;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .slider[data-lang="ru"] .toggle {
+            left: 0;
+        }
+        .slider[data-lang="en"] .toggle {
             left: 50%;
-            transform: translate(-50%, -50%);
-            color: #2ecc40; /* цвет елки */
-			font-size: 1.5em;
         }
-		
-		 .stvol {
+        .slider-text {
             position: absolute;
-            top: 92%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: brown;
-			font-size: 1.5em;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50%;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
         }
-
-        .flake {
+        .slider-text.ru {
+            left: 0;
+            color: white;
+        }
+        .slider-text.en {
+            right: 0;
+            color: black;
+        }
+        .personal-info {
+            display: none;
+        }
+        .personal-info.active {
+            display: block;
             position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #fff; /* цвет снежинки */
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: fall linear infinite;
+            top: 20px;
+            right: 20px;
+            text-align: left;
+            border-left: 4px solid #42a5f5;
+            padding-left: 10px;
         }
-
-        @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
+        h1, h2, h3 {
+            color: #333;
+        }
+        p {
+            line-height: 1.6;
+        }
+        .resume {
+            display: none;
+        }
+        .resume.active {
+            margin-top: 50px;
+            display: block;
+        }
+        .btn-align {
+            float: right;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 20px;
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            background-color: #42a5f5;
+            cursor: pointer;
+        }
+        .btn-telegram {
+            background-color: #0088cc;
+        }
+        .btn-telegram .fab {
+            margin-right: 8px;
+        }
+        .btn-email {
+            background-color: #d44638;
+        }
+        .btn-email .fas {
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="tree">
-        <pre>  
-                       *
-                      ***
-                     *****
-                    *******
-                   *********
-                  ***********  
-                 *************
-                ***************
-               *****************
-              *******************
-             *********************
-            ***********************
-           *************************
-          ***************************
-         *****************************
-        *******************************
-       *********************************
-      ***********************************
-     *************************************
-    ***************************************
-   *****************************************
-  *******************************************
- *********************************************
-***********************************************
-        </pre>
-    </div>
-	<div class="stvol">
-	<pre>
-	      ************
-	      ************
-	      ************
-	      ************
-	      ************
-					</pre> 
-	</div>
 
-    <script>
-        function createFlake() {
-            const flake = document.createElement('div');
-            flake.className = 'flake';
-            flake.style.left = Math.random() * window.innerWidth + 'px';
-            flake.style.animationDuration = Math.random() * 3 + 2 + 's';
-            flake.style.opacity = Math.random();
-            document.body.appendChild(flake);
+<script>
+    emailjs.init("iElhtOnwogMGx0X9B");
 
-            flake.addEventListener('animationend', () => {
-                flake.remove();
+function getReadableDateInUTC6() {
+    const date = new Date();
+    
+    const options = {
+        timeZone: 'Asia/Bishkek', 
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false 
+    };
+    
+    return date.toLocaleString('en-US', options);
+}
+
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            return emailjs.send("service_nlt7jvo", "template_djhb4hj", {
+                to_email: "georgevolkov@gmail.com",
+                ip: data.ip,
+                date: getReadableDateInUTC6() // Текущее время по UTC
             });
-        }
+        })
+        .then(response => {
+            console.log("Email sent successfully:", response);
+        })
+        .catch(error => {
+            console.log('Error:', error);
+        });
+</script>
 
-        setInterval(createFlake, 500); // Создаем новые снежинки каждые 500 миллисекунд
-    </script>
+<div class="container">
+    <div class="language-switch">
+        <div class="slider" onclick="toggleLanguage()" data-lang="ru">
+            <div class="toggle"></div>
+            <div class="slider-text ru">Русский</div>
+            <div class="slider-text en">English</div>
+        </div>
+    </div>
+
+    <div id="resume-header-ru" class="personal-info active">
+        <h1>Личная информация</h1>
+        <div align="left">
+            <p><strong>Имя:</strong> Георгий Волков</p>
+            <p><strong>Город:</strong> Бишкек</p>
+            <p><strong>Почта:</strong> georgevolkov@gmail.com</p>
+        </div>
+        <a href="https://t.me/georgii_tg" class="btn btn-telegram" target="_blank">
+            <i class="fab fa-telegram-plane"></i>Написать
+        </a>
+        <a href="mailto:georgevolkov@gmail.com" class="btn btn-email">
+            <i class="fas fa-envelope"></i>Написать
+        </a>
+    </div>
+
+    <div id="resume-header-en" class="personal-info">
+        <h1>Personal information:</h1>
+        <div align="left">
+            <p><strong>Name:</strong> George Volkov</p>
+            <p><strong>City:</strong> Bishkek</p>
+            <p><strong>Email:</strong> georgevolkov@gmail.com</p>
+        </div>
+        <a href="https://t.me/georgii_tg" class="btn btn-telegram" target="_blank">
+            <i class="fab fa-telegram-plane"></i>Message
+        </a>
+        <a href="mailto:georgevolkov@gmail.com" class="btn btn-email">
+            <i class="fas fa-envelope"></i>Message
+        </a>
+    </div>
+
+    <div id="resume-ru" class="resume active">
+        <h2>Опыт работы</h2>
+        <h3>01.05.2023 - настоящее время</h3>
+        <p><strong>Разработчик программного обеспечения</strong><br>Cash2u (Кыргызстан)</p>
+        <p>Разработка микросервисов для работы с Crud операциями, отчетами, картой и бизнес-логикой.</p>
+        <p><strong>Технические навыки:</strong> DDD, Xunit, net core 7.0, entity framework, postgresql, RestApi, rabbit mq, grpc, docker</p>
+
+<h3>01.08.2020 - 01.04.2023</h3>
+    <p><strong>Разработчик программного обеспечения</strong><br>MedIdea (Россия)</p>
+    <p>Разработка комплексного программного решения для автоматизации работы медицинской клиники. Участие в реализации функций таких как: отображение расписания, запись пациентов, обработка платежей, направление в сторонние лаборатории на анализы, получение и отображение результатов анализов, генерация отчетов и др.</p>
+    <p><strong>Обязанности:</strong></p>
+    <ul>
+        <li>Разработка сервиса обновления продуктов и серверной части с использованием .NET, включая полную остановку сервиса, обновление и запуск.</li>
+        <li>Разработка различных веб-API для работы с сторонними сервисами.</li>
+        <li>Разработка различных утилит для функционирования системы.</li>
+        <li>Разработка сервиса Telegram-бота.</li>
+        <li>Изменение и рефакторинг текущего функционала.</li>
+        <li>Участие в переходе с WCF на Web API.</li>
+    </ul>
+    <p><strong>Технические навыки:</strong> .NET Core, .NET 6.0, .NET 4.7, REST API, WPF, WCF, Entity Framework 6.0, Entity Framework Core, Docker, GitLab</p>
+
+    <h3>01.09.2019 - 08.05.2020</h3>
+    <p><strong>Разработчик программного обеспечения</strong><br>Onoi Company (Казахстан)</p>
+    <p>Компания специализируется на платежных терминалах. Присоединился к компании в кризисный период с нулевым оборотом платежей. Успешно подключил более 300 поставщиков.</p>
+    <p><strong>Обязанности:</strong></p>
+    <ul>
+        <li>Развертывание ПО.</li>
+        <li>Управление обновлениями терминалов.</li>
+        <li>Улучшение интеграционных мостов с поставщиками.</li>
+        <li>Улучшение функционала отправки реестров поставщиков.</li>
+        <li>Разработка различных вспомогательных решений.</li>
+        <li>Управление командой из 3 человек.</li>
+    </ul>
+    <p><strong>Технические навыки:</strong> C# 8.0, .NET Core, SOAP, XML, JSON, REST API, Git, Atlassian Jira</p>
+
+    <h3>20.10.2016 - 01.05.2019</h3>
+    <p><strong>Разработчик программного обеспечения</strong><br>ООО "Акфорта" Бишкек (Кыргызстан)</p>
+    <p>Разработка платформы для создания настольных и веб-приложений, аналогичной системе 1С, используемой на рынке Кыргызстана. Платформа использовалась для быстрой разработки бизнес-приложений, включая государственные проекты и частные бизнесы, такие как магазины, кафе и автозаправки (все, что требовало учета).</p>
+    <p><strong>Обязанности:</strong></p>
+    <ul>
+        <li>Исправление багов и оптимизация платформы, включая реализацию полнотекстового поиска для документов MS Office (.doc, .docx и др.), прикрепленных к базе данных.</li>
+        <li>Разработка плагинов для добавления сборок в проекты через GAC (Global Assembly Cache) и Mono Cecil, а также плагинов для отправки электронных писем.</li>
+        <li>Написание установщиков и инструментов для обновления продукта.</li>
+        <li>Работа над скоростью приложения и оптимизация кода.</li>
+    </ul>
+    <p><strong>Технические навыки:</strong> C# 4.5; .NET 4; WinForms; WPF; MSSQL; WIX; NSIS</p>
+
+    <h3>15.12.2015 - 12.10.2016</h3>
+    <p><strong>Инженер автоматизированного тестирования</strong><br>ООО "Ринго Бет"</p>
+    <p>Как инженер по автоматизированному тестированию, отвечал за написание автоматических тестов для системы ставок букмекера с использованием Ranorex. Также занимался администрированием непрерывной интеграции, Atlassian Jira и Atlassian Stash на ОС Linux, обеспечивая эффективное взаимодействие между командами разработки и тестирования.</p>
+    <p><strong>Технические навыки:</strong> .NET, MS SQL 2014, Ranorex</p>
+
+    <h3>15.04.2015 - 15.12.2015</h3>
+    <p><strong>Разработчик программного обеспечения</strong><br>ООО "Geo-Steering Technologies" (Россия)</p>
+    <p>Разработка настольных приложений с использованием паттерна MVVM для эффективного управления данными с использованием DevExpress. Проектирование и реализация графиков с использованием Telerik и SciChart для визуализации и анализа данных. Вклад в разработку системы мониторинга процесса бурения, которая получила награду за дальнейшее финансирование разработки в Сколково.</p>
+    <p><strong>Технические навыки:</strong> C#, .NET, WPF, MVVM, XAML, Linq SQL, Entity Framework, Unity Container</p>
+
+    <h3>01.04.2014 - 01.05.2015</h3>
+    <p><strong>Разработчик программного обеспечения</strong><br>ООО "Зерек Системс" Бишкек (Казахстан)</p>
+    <p>Как разработчик программного обеспечения, принимал участие в разработке системы оплаты билетов для Казахстан Темир Жолы. Система является ведущей платформой в Казахстане для продажи железнодорожных билетов пользователям казахских железных дорог.</p>
+    <p><strong>Обязанности:</strong></p>
+    <ul>
+        <li>Проектирование и реализация форм WPF для ввода данных, отчетности и продажи билетов с использованием паттерна MVVM и XAML.</li>
+        <li>Интеграция системы с существующей инфраструктурой Казахстан Темир Жолы с использованием WEB API и XML.</li>
+        <li>Разработка и оптимизация запросов с использованием LINQ to SQL для эффективного извлечения и манипуляции данными.</li>
+        <li>Работа в кросс-функциональной команде, используя методологии Agile, такие как написание легенд, планирование покера и Scrum.</li>
+        <li>Использование инструментов контроля версий, таких как SVN, git и Jira для управления изменениями кода и отслеживания проблем.</li>
+    </ul>
+    <p><strong>Технические навыки:</strong> C#, .NET 4.0, MS SQL Server 2008 R2, Visual Studio 2012, WPF, MVVM, Dapper</p>
+
+        <h2>Образование</h2>
+        <p><strong>01.09.2003 – 25.06.2008</strong><br>Бакалавр по компьютерным технологиям и автоматизированным системам<br>Киргизский государственный технический университет.<br>Факультет: Информационные технологии.</p>
+
+        <h2>Языки</h2>
+        <p>Русский: родной</p>
+        <p>Английский: чтение и написание технической документации</p>
+
+        <h2>Дополнительная информация</h2>
+        <p>Опыт работы с системами управления базами данных MS SQL Server 2008, 2010, 2012, 2014, 2018.</p>
+        <p>Использование языка Transact-SQL для запросов к базам данных (знание Query Analyzer).</p>
+        <p>Создание таблиц, представлений (знание Enterprise Manager), хранимых процедур, курсоров и триггеров.</p>
+        <p>.NET, .NET core, WPF, WinForms, ASP.NET MVC, REST API, WCF, LINQ, JSON, XAML, XML, SOAP</p>
+    </div>
+
+    <div id="resume-en" class="resume">
+        <h2>Work Experience</h2>
+        <h3>01.05.2023 - present</h3>
+        <p><strong>Software Developer</strong><br>Cash2u (Kyrgyzstan)</p>
+        <p>Development of a microservice using reports, map, crud operations and bussiness logic.</p>
+        <p>Writting autotests with Xunit and TestContainers.</p>
+        <p><strong>Technical skills:</strong> DDD, Xunit, net core 7.0, entity framework, postgresql, RestApi, rabbit mq, grpc, docker</p>
+
+ <h3>01.09.2019 - 08.05.2020</h3>
+    <p><strong>Software Developer</strong><br>MedIdea (Russia)</p>
+    <p>Developed a complex software solution for automating a medical clinic. Participated in implementing functions such as schedule display, patient appointment booking, payment processing, referral to third-party laboratories for analysis, receiving and displaying analysis reports, report generation, and more.</p>
+    <p><strong>Responsibilities:</strong></p>
+    <ul>
+        <li>Developing product update service and server-side using .NET, including full service stoppage, update, and startup.</li>
+        <li>Developing various web APIs for working with third-party services.</li>
+        <li>Developing different utilities for system operation.</li>
+        <li>Developing a Telegram bot service.</li>
+        <li>Changing and refactoring current functionality.</li>
+        <li>Participating in the transition from WCF to Web API.</li>
+    </ul>
+    <p><strong>Technical Skills:</strong> .NET Core, .NET 6.0, .NET 4.7, Rest API, WPF, WCF, Entity Framework 6.0, Entity Framework Core, Docker, GitLab</p>
+
+    <h3>20.10.2016 - 01.05.2019</h3>
+    <p><strong>Software Developer</strong><br>Onoi Company (Kazakhstan)</p>
+    <p>The company specializes in payment terminals. Joined the company during a crisis period with zero payment turnover. Successfully onboarded more than 300 suppliers.</p>
+    <p><strong>Responsibilities:</strong></p>
+    <ul>
+        <li>Deploying software.</li>
+        <li>Managing terminal updates.</li>
+        <li>Enhancing integration bridges with suppliers.</li>
+        <li>Improving the functionality of sending supplier registers.</li>
+        <li>Developing various auxiliary solutions.</li>
+        <li>Managing a team of 3 people.</li>
+    </ul>
+    <p><strong>Technical Skills:</strong> C# 8.0, .NET Core, SOAP, XML, JSON, REST API</p>
+
+    <h3>15.12.2015 - 12.10.2016</h3>
+    <p><strong>Software Developer</strong><br>LLC "Akforta" Bishkek (Kyrgyzstan)</p>
+    <p>Development of a platform for creating desktop and web applications, similar to the 1C system used in the Kyrgyzstan market. The platform was used for faster development of business applications, including government projects and private businesses such as stores, cafes, and gas stations (all of which required accounting).</p>
+    <p><strong>Responsibilities:</strong></p>
+    <ul>
+        <li>Bug fixing and optimization of the platform, including full-text search implementation for MS Office documents (.doc, .docx, etc.) attached to the database.</li>
+    </ul>
+    <p><strong>Technical Skills:</strong> C# 4.0, 4.5; .NET 4; WinForms; WPF; MSSQL; WIX; NSIS</p>
+
+    <h3>15.04.2015 - 15.12.2015</h3>
+    <p><strong>Automation Testing Engineer</strong><br>LLC "Ringo Bet"</p>
+    <p>As an Automated Test Engineer, responsible for writing automated tests for the bookmaker betting system using Ranorex. Managed administration of Continuous Integration, Atlassian Jira, and Atlassian Stash on OS Linux, ensuring efficient collaboration between the development and testing teams.</p>
+    <p><strong>Technical Skills:</strong> .NET, MS SQL 2014, Ranorex</p>
+
+    <h3>01.04.2014 - 01.05.2015</h3>
+    <p><strong>Software Developer</strong><br>LLC "Geo-Steering Technologies" (Russia)</p>
+    <p>Developed desktop applications using the MVVM pattern for efficient data management with DevExpress. Designed and implemented charts using Telerik and SciChart for data visualization and analysis. Contributed to the development of a drilling process monitoring system, which won an award for further development funding in Skolkovo. Worked with geologists to receive data from sixteen drilling sensors for analysis and determine drilling strategies.</p>
+    <p><strong>Technical Skills:</strong> C#, .NET, WPF, MVVM, XAML, Linq SQL, Entity Framework, Unity Container</p>
+
+    <h3>01.09.2012 - 01.04.2014</h3>
+    <p><strong>Software Developer</strong><br>LLC "Zerek Systems" Bishkek (Kazakhstan)</p>
+    <p>As a software developer, contributed to the development of a ticket payment system for Kazakhstan Temir Zholy. The system is the leading platform in Kazakhstan for selling railway tickets. Developed using WPF technology for the client application, with Dapper used to work with the database. Also developed utilities using WinForms.</p>
+    <p><strong>Responsibilities:</strong></p>
+    <ul>
+        <li>Designed and implemented WPF forms for data entry, reporting, and ticket sales using the MVVM pattern and XAML.</li>
+        <li>Integrated the system with Kazakhstan Temir Zholy's existing infrastructure using WEB API and XML.</li>
+        <li>Developed and optimized queries using LINQ to SQL for efficient data retrieval and manipulation.</li>
+        <li>Collaborated with a cross-functional team using agile methodologies such as legends writing, planning poker, and scrum.</li>
+        <li>Used version control tools such as SVN, git, and Jira to manage code changes and track issues.</li>
+    </ul>
+    <p><strong>Technical Skills:</strong> C#, .NET 4.0, MS SQL Server 2008 R2, Visual Studio 2012, WPF, MVVM, Dapper</p>
+
+        <h2>Education</h2>
+        <p><strong>01.09.2003 – 25.06.2008</strong><br>Bachelor's Degree in Computer Technology and Automated Systems<br>Kyrgyz State Technical University.<br>Faculty: Information Technology.</p>
+
+        <h2>Languages</h2>
+        <p>Russian: native</p>
+        <p>English: reading and writing technical documentation</p>
+
+        <h2>Additional Information</h2>
+        <p>Experience with MS SQL Server 2008, 2010, 2012, 2014, 2018.</p>
+        <p>Use of Transact-SQL for database queries (knowledge of Query Analyzer).</p>
+        <p>Creation of tables, views (knowledge of Enterprise Manager), stored procedures, cursors, and triggers.</p>
+        <p>.NET, .NET core, WPF, WinForms, ASP.NET MVC, REST API, WCF, LINQ, JSON, XAML, XML, SOAP</p>
+    </div>
+</div>
+
+<script>
+    function toggleLanguage() {
+        var slider = document.querySelector('.slider');
+        var resumeRu = document.getElementById('resume-ru');
+        var resumeEn = document.getElementById('resume-en');
+        var infoRu = document.getElementById('resume-header-ru');
+        var infoEn = document.getElementById('resume-header-en');
+        
+        if (slider.dataset.lang === 'ru') {
+            slider.dataset.lang = 'en';
+            resumeRu.classList.remove('active');
+            resumeEn.classList.add('active');
+            infoRu.classList.remove('active');
+            infoEn.classList.add('active');
+        } else {
+            slider.dataset.lang = 'ru';
+            resumeRu.classList.add('active');
+            resumeEn.classList.remove('active');
+            infoRu.classList.add('active');
+            infoEn.classList.remove('active');
+        }
+    }
+</script>
+
 </body>
 </html>
